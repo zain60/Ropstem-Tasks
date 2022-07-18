@@ -1,5 +1,6 @@
 import mongoose  from "mongoose";
 import {config} from "../config/config.js"
+// import currentConf from "../config/current-config.js"
 
 async function connectDatabase() {
     const connOptions  = {

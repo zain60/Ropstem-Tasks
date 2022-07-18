@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import router from './src/routes/index.js'
 import {connectDatabase} from "./src/config/db.js"
+// import {currentConf} from "./src/config/current-config.js";
+import morgan from "morgan";
 
 const app = express()
 const port  = process.env.PORT || '3000';
@@ -15,6 +17,11 @@ dotenv.config();
 //Body Parsing
 app.use(express.urlencoded({ extended: true }));
 connectDatabase()
+
+// Morgan
+// if (process.env.NODE_ENV === "development") {
+//     app.use(morgan("dev"));
+//   }
 
 
 

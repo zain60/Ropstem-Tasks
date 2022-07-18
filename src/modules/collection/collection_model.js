@@ -1,12 +1,13 @@
-import { Schema, model } from "mongoose";
-//@ts-ignore
 
+import mongoose from "mongoose";
+const Schema = mongoose.Schema
+//@ts-ignore
 const collectionSchema = new Schema({
   userAddress: String,
   collectionName: String,
   description : String,
-  ipfsHash : URL
+  ipfsHash : String
 });
 
-const collection = model("collection", collectionSchema);
+const collection = mongoose.model("collection", collectionSchema);
 export { collection };

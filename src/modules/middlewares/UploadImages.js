@@ -1,10 +1,10 @@
 import axios from 'axios'
 import fs  from 'fs';
 import FormData from 'form-data';
-import rfs from "recursive-fs";
+import rfs from 'recursive-fs';
 import basePathConverter from "base-path-converter";
 import got from 'got';
-import config from '../../config/config';
+import { config } from '../../config/config.js';
 
 
 
@@ -42,10 +42,10 @@ console.log(res);
 
 }
 
-const uploadNfts = async (req) => {
+const uploadNfts = async (imagePath) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     let data = new FormData();
-    const path = req.body
+    const path = imagePath
     data.append('file', fs.createReadStream(path));
     try {
         const response = await axios.post(url, data,
@@ -57,8 +57,7 @@ const uploadNfts = async (req) => {
                 }
             }
         );
-        console.log("Responce == ",response.data.IpfsHash);
-        return hash = response.data.IpfsHash
+        return  response.data.IpfsHash
     } catch (error) {
        console.log(error);
     }
