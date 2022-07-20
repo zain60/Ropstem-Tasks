@@ -1,6 +1,6 @@
 
 import { collection } from "../collection/collection_model.js";
-import {uploadNfts} from '../middlewares/UploadImages.js'
+import {uploadNfts} from '../middlewares/pinata-api.js'
 
 
 const createCollection = async(req,res)=> {

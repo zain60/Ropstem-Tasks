@@ -1,7 +1,5 @@
 import  {Router}  from 'express';
 var router = Router();
-// import contractRoutes from '../modules/smartcontract/contract-route.js';
-// import metadataRoutes from '../modules/metaData/metadata-route.js'
 import collectionRoutes from '../modules/collection/collection_route.js'
 import NftRoutes from '../modules/nft/nft-route.js'
 

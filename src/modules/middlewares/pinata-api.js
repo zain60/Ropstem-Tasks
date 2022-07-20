@@ -78,7 +78,6 @@ const uploadJason = async (e) => {
                 }
             }
         );
-        console.log("Responce == ",response);
         return response.data.IpfsHash
     } catch (error) {
        console.log(error);
