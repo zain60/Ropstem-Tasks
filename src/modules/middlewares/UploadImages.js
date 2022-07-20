@@ -63,23 +63,23 @@ const uploadNfts = async (imagePath) => {
     }
 };
 
-const uploadJason = async () => {
+const uploadJason = async (e) => {
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     //we gather a local file from the API for this example, but you can gather the file from anywhere
-    let data = new FormData();
-    data.append('file', fs.createReadStream('/home/troon60/Ethereum-StoreFront/zain.png'));
+    let data = e
 
     try {
         const response = await axios.post(url, data,
             {
                 headers: {
-                    'Content-Type': `multipart/form-data; boundary= ${data._boundary}`,
+                    'Content-Type': 'application/json',
                     'pinata_api_key': config.pinataApiKey,
                     'pinata_secret_api_key': config.pinataSecretApiKey
                 }
             }
         );
-        // console.log("Responce == ",response);
+        console.log("Responce == ",response);
+        return response.data.IpfsHash
     } catch (error) {
        console.log(error);
     }

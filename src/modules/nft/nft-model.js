@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 //@ts-ignore
 const nftSchema = new Schema({
-  nftName :Number,
   userAddress : String,
-  description  : String,
-  collectionName : String,
-  url :String,
   metaDataUrl : String
 });
 
