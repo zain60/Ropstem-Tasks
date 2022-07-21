@@ -8,4 +8,5 @@ router.route('/createNft').post(
 router.route('/userNft').get(
     userNfts
 );
+
 export default router;

@@ -3,11 +3,14 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 //@ts-ignore
 const collectionSchema = new Schema({
-  collectionId:Number,
-  userAddress: String,
+  collectionId  : Number,
   collectionName: String,
+  userAddress : String,
   description : String,
-  ipfsHash : String
+  totalVolume : Number,
+  items       : Number,
+  collectionBackgroundImageHash : String,
+  collectionProfileHash         :String
 });
 
 const collection = mongoose.model("collection", collectionSchema);

@@ -6,7 +6,7 @@ import { uploadJason, uploadNfts } from "../middlewares/pinata-api.js";
 
 const createNft = async(req,res) => {
 
-    const {createraddress,name,description,collectionName,url,imagePath} = req.body
+    const {createraddress,name,description,collectionId,imagePath} = req.body
 
     const imageUrl =  await uploadNfts(imagePath)
 
@@ -35,8 +35,12 @@ const createNft = async(req,res) => {
     const nftmetaData = await  uploadJason(metdata);
 
     var nftObject = new Nfts({
-    userAddress : createraddress,
-    metaDataUrl : nftmetaData
+        userAddress : createraddress,
+        metaDataUrl : nftmetaData,
+        collection  :  collectionId,    
+        onSale:false,
+        saleprice:0.0,
+        views:0,
     })
 
     await Nfts.create(nftObject).then(()=>{
@@ -49,6 +53,6 @@ const userNfts = async(req)=>{
     var {useraddress} = req.body
     var nftData = await Nfts.find({userAddress : useraddress})
     console.log("user nft data ",nftData);
-  }
+}
 
 export {createNft,userNfts}
