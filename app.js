@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv';
 import path from 'path';
+import cors from 'cors'
 import router from './src/routes/index.js'
 import {connectDatabase} from "./src/config/db.js"
 // import {currentConf} from "./src/config/current-config.js";
@@ -23,7 +24,7 @@ connectDatabase()
 //     app.use(morgan("dev"));
 //   }
 
-
+app.use(cors());
 
 app.use(express.json());
 app.use('/api',router)
