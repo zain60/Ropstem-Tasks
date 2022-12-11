@@ -1,13 +1,13 @@
 // const Users = require('../models/userModel')
 import { User } from '../user/user-model.js'
-import {bcrypt} from 'bcrypt';
-import {jwt} from 'jsonwebtoken'
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
 
 
 
    const register = async (req, res) => {
         try {
-            const { fullname, username, email, password, gender } = req.body
+            const {username, email, password } = req.body
             let newUserName = username.toLowerCase().replace(/ /g, '')
 
             const user_name = await User.findOne({username: newUserName})
@@ -22,7 +22,7 @@ import {jwt} from 'jsonwebtoken'
             const passwordHash = await bcrypt.hash(password, 12)
 
             const newUser = new User({
-                fullname, username: newUserName, email, password: passwordHash, gender
+             username: newUserName, email, password: passwordHash
             })
 
 

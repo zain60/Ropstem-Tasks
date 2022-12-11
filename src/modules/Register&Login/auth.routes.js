@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { register ,login,logout,generateAccessToken} from './auth.services.js';
+import { register,login,logout,generateAccessToken} from './auth.services.js';
 
 router.route('/register').post(
     register

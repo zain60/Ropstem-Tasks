@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
-        required: true,
         trim: true,
         maxlength: 25
     },
@@ -29,7 +28,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png'
     },
-    role: {type: String, default: 'user'},
+    role: {type: String, default: 'User'},
     gender: {type: String, default: 'male'},
     mobile: {type: String, default: ''},
     address: {type: String, default: ''},
@@ -39,9 +38,9 @@ const userSchema = new mongoose.Schema({
         maxlength: 200
     },
     website: {type: String, default: ''},
-    followers: [{type: mongoose.Types.ObjectId, ref: 'user'}],
-    following: [{type: mongoose.Types.ObjectId, ref: 'user'}],
-    saved: [{type: mongoose.Types.ObjectId, ref: 'user'}]
+    followers: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+    following: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+    saved: [{type: mongoose.Types.ObjectId, ref: 'User'}]
 }, {
     timestamps: true
 })
