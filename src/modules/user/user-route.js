@@ -1,14 +1,26 @@
 import express from 'express';
 const router = express.Router();
-import {signUp,logIn} from '../user/user-services.js'
-import{checkDuplicateUsernameOrEmail} from '../user/user-meddlware.js'
+import {suggestionsUser,unfollow,follow,updateUser,getUser,searchUser} from '../user/user-services.js'
 
-router.route('/signUp').post(
-    checkDuplicateUsernameOrEmail,
-    signUp
+
+router.route('/getUser').post(
+    getUser
 );
-router.route('/login').get(
-    logIn
+router.route('/searchUser').get(
+    searchUser
+);
+
+router.route('/updateUser').post(
+    updateUser
+);
+router.route('/follow').get(
+    follow
+);
+router.route('/unfollow').post(
+    unfollow
+);
+router.route('/suggestionsUser').get(
+    suggestionsUser
 );
 
 export default router;

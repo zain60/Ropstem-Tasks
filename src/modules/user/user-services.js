@@ -1,55 +1,104 @@
-
-import { user } from "./user-model.js";
-import bcrypt from "bcrypt";
-
-//  === > Register OR signup New User
- 
-const signUp = async(req,res) => {
-
-    const {firstName,LastName,email,password} = req.body 
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    var userObject = new User({
-        userName:firstName+LastName,
-        email : email,
-        password:hashedPassword,
-    })
-
-    try {
-        await user.create(userObject).then(()=>{
-            res.status(200).send("user Registered")
-        }) 
-    } catch (error) {
-        res.status(400).send(error)
-    }
-};
+// const Users = require('../models/userModel')
+import { User } from './user-model.js'
 
 
-//  === > LOgin into  User Account
+  const  searchUser = async (req, res) => {
+        try {
+            const users = await User.find({username: {$regex: req.query.username}})
+            .limit(10).select("fullname username avatar")
+            
+            res.json({users})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
 
-const logIn = async (req,res) => {
-    const { email, password } = req.body
+   const  getUser = async (req, res) => {
+        try {
+            const user = await User.findById(req.params.id).select('-password')
+            .populate("followers following", "-password")
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+            
+            res.json({user})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+    const updateUser = async (req, res) => {
+        try {
+            const { avatar, fullname, mobile, address, story, website, gender } = req.body
+            if(!fullname) return res.status(400).json({msg: "Please add your full name."})
 
-    try {
-      let user = await user.findOne({
-        email
-      })
-      !user&& res.status(404).json("user not found");
+            await User.findOneAndUpdate({_id: req.user._id}, {
+                avatar, fullname, mobile, address, story, website, gender
+            })
 
-      const validPassword = await bcrypt.compare(password, user.password);
-      !validPassword && res.status(404).json("wrong password");
-       if(validPassword){
-        res.status(200).json("LogedIN Successfully")
+            res.json({msg: "Update Success!"})
 
-    }}
-   catch(error){
-     return res.status(400).json({
-    message: 'Incorrect credentials '
- })
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+   const follow =  async (req, res) => {
+        try {
+            const user = await User.find({_id: req.params.id, followers: req.user._id})
+            if(user.length > 0) return res.status(500).json({msg: "You followed this user."})
 
-}
-}
+            const newUser = await User.findOneAndUpdate({_id: req.params.id}, { 
+                $push: {followers: req.user._id}
+            }, {new: true}).populate("followers following", "-password")
 
-export {signUp,logIn}
+            await User.findOneAndUpdate({_id: req.user._id}, {
+                $push: {following: req.params.id}
+            }, {new: true})
+
+            res.json({newUser})
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+   const unfollow =  async (req, res) => {
+        try {
+
+            const newUser = await User.findOneAndUpdate({_id: req.params.id}, { 
+                $pull: {followers: req.user._id}
+            }, {new: true}).populate("followers following", "-password")
+
+            await User.findOneAndUpdate({_id: req.user._id}, {
+                $pull: {following: req.params.id}
+            }, {new: true})
+
+            res.json({newUser})
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+
+   const suggestionsUser =  async (req, res) => {
+        try {
+            const newArr = [...req.user.following, req.user._id]
+
+            const num  = req.query.num || 10
+
+            const users = await User.aggregate([
+                { $match: { _id: { $nin: newArr } } },
+                { $sample: { size: Number(num) } },
+                { $lookup: { from: 'users', localField: 'followers', foreignField: '_id', as: 'followers' } },
+                { $lookup: { from: 'users', localField: 'following', foreignField: '_id', as: 'following' } },
+            ]).project("-password")
+
+            return res.json({
+                users,
+                result: users.length
+            })
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+
+
+
+export{suggestionsUser,unfollow,follow,updateUser,getUser,searchUser}

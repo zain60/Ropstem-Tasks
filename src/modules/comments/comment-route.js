@@ -1,25 +1,23 @@
 import express from 'express';
 const router = express.Router();
-import {createPost,getPost} from "../posts/posts-services.js"
+import {createComment,updateComment,likeComment,unLikeComment,deleteComment} from "../comments/comment-services.js"
 
 
-router.route('/createPost').post(
-    createPost
+router.route('/createComment').post(
+    createComment
 );
-router.route('/deletePost').get(
-    // deletePost
+router.route('/deleteComment').get(
+    deleteComment
 );
-router.route('/updatePost').post(
-    // updatePost
+router.route('/updateComment').post(
+    updateComment
 );
-router.route('/likePost').get(
-    // likePost
+router.route('/likeComment').get(
+    likeComment
 );
-router.route('/unLikePost').get(
-    // unLikePost
+router.route('/unLikeComment').get(
+    unLikeComment
 );
-router.route('/getPost').get(
-    getPost
-);
+
 
 export default router;

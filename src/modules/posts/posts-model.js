@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { user } from "../user/user-model.js";
+import { User } from "../user/user-model.js";
+import { comment } from "../comments/comment-model.js";
 const Schema = mongoose.Schema
 //@ts-ignore
 const postSchema = new Schema({
@@ -9,9 +10,9 @@ const postSchema = new Schema({
         type: Array,
         required: true
     },
-    likes: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     comments: [{ type: mongoose.Types.ObjectId, ref: 'comment' }],
-    user: {type: mongoose.Types.ObjectId, ref: 'user'}
+    user: {type: mongoose.Types.ObjectId, ref: 'User'}
 }, {
     timestamps: true
   },);
