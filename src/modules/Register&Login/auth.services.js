@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 
    const register = async (req, res) => {
         try {
+            console.log("enter request")
             const {username, email, password } = req.body
             let newUserName = username.toLowerCase().replace(/ /g, '')
 

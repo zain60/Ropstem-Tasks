@@ -259,4 +259,4 @@ class APIfeatures {
         }
     };
 
-export{createPost,getPost,getPostsDicover,deletePost,getPosts,updatePost,likePost,unLikePost,getSavePosts,savePost,unSavePost,getUserPosts,}
+export{createPost,getPost,getPostsDicover,deletePost,getPosts,updatePost,likePost,unLikePost,getSavePosts,savePost,unSavePost,getUserPosts}
