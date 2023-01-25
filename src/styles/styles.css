@@ -5,7 +5,7 @@
     left: 0px; */
 }
 .btn-connect{
-    background-color: #EA923E;
+    background-color:#4CAF50;
     border-color: #EA923E;
     color: white;
     border-radius: 100px;
@@ -26,12 +26,12 @@
     box-shadow: 5px 2px 5px 5px rgba(6, 1, 34, 0.418);
 }
 .btn-connected{
-    background-color: #ea913e25;
-    border-color: #EA923E;
-    color: #EA923E;
+    background-color: #4CAF50;
+    border-color: #ffffff;
+    color: #f7f7f7;
     border-radius: 100px;
     font-size: 16px;
-    border: 3px solid #EA923E;
+    border: 3px solid #f0f0f0;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     width: auto;
     height: 45px;  
@@ -352,4 +352,54 @@ box-shadow: 5px 2px 5px 5px rgba(4, 3, 14, 0.664);
     position:relative;
 }
 
+
+.full-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .input-field {
+    padding: 10px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 300px;
+  }
+  
+  .primary-button {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+    height: 50px;
+    width: 300px;
+  }
+  
+  .secondary-button {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    height: 50px;
+    width: 300px;
+    
+  }
+  .text-justify {
+    text-align: justify;
+    text-shadow: #000000;
+    text-decoration:solid;
+    color: white;
+    padding: auto;
+    color: rgb(236, 233, 233);
+  }
 

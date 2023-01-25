@@ -1,8 +1,7 @@
 
 import './styles/styles.css'
-import './App.css';
 import { useState,useEffect } from 'react';
-import Home from './components/Home';
+import FullPageButtons from './components/Home';
 
 
 function App() {
@@ -53,7 +52,7 @@ function App() {
      <div className="App">
       <div >
       <div className="div-header sticky" >
-        <h1 className = "title"> StrongBlock</h1>
+        <h1 className = "title"> Ropstem Tokens</h1>
               {
               conStatus?   <button className="btn-connected" >{address&&address.length > 5
                 ? address.substr(0, 6) +
@@ -62,12 +61,12 @@ function App() {
                 : address}
               </button>
               :
-              <button className="btn-connect" onClick = {connectPopUp} >Connect</button>
+              <button className="btn-connect" onClick = {connectPopUp} >Connect metamsk</button>
               }
        </div>
       </div>
      </div>
-         <Home address = {address}/>
+         <FullPageButtons address = {address}/>
     </div>
   );
 
