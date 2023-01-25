@@ -4,13 +4,16 @@ pragma solidity ^0.8.0;
 import "./IERC721.sol";
 
 contract OpenApe is IERC721 {
+
+    // ----State variables--- //
+
     string private _name = "OpenApe";
     string private  _symbol = "APE";
     uint256 private  _totalSupply;
-
     address private minterRole;
     address public  owner;
-
+     
+    // ----  mappings --- //
     mapping(address => uint256) public override  balanceOf;
     mapping(uint256 => address) public override ownerOf;
     mapping(uint256 => address) public  approvedFor;
@@ -21,7 +24,8 @@ contract OpenApe is IERC721 {
         owner = msg.sender;
     }
    
-     function addMinterRole(address _contractAddress) public {
+    //  function to add minter Role,Generally used to add service contract address as minter
+    function addMinterRole(address _contractAddress) public {
         require(msg.sender == owner, "Only admin can add new admin.");
         minterRole = _contractAddress;
     }
@@ -30,6 +34,7 @@ contract OpenApe is IERC721 {
         require(msg.sender== owner, "Only owner can remove admin.");
         minterRole = _contractAddress;
     }
+    
     function name() override external view returns (string memory){
         return _name;
     }

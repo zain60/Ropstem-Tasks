@@ -3,9 +3,11 @@
 pragma solidity ^0.8.0;
 import "./IERC20.sol";
 contract Hammer is IERC20 {
+    // mappings
     mapping(address => bool) public minterRole;
     mapping(address => uint256) override public balanceOf;
     mapping(address => mapping(address => uint256)) override public allowance;
+    // state variables
     string public name;
     string public symbol;
     uint8 public decimals;
