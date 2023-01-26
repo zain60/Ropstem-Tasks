@@ -6,6 +6,7 @@ import router from './src/routes/index.js'
 import {connectDatabase} from "./src/config/db.js"
 // import {currentConf} from "./src/config/current-config.js";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 const app = express()
 const port  = process.env.PORT || '3000';
@@ -25,7 +26,7 @@ connectDatabase()
 //   }
 
 app.use(cors());
-
+app.use(cookieParser())
 app.use(express.json());
 app.use('/api',router)
 

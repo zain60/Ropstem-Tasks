@@ -1,104 +1,122 @@
-// const Users = require('../models/userModel')
-import { User } from './user-model.js'
+
+import { User } from '../user/user-model.js';
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 
-  const  searchUser = async (req, res) => {
+
+   const signup = async (req, res) => {
         try {
-            const users = await User.find({username: {$regex: req.query.username}})
-            .limit(10).select("fullname username avatar")
+            const {username, email} = req.body
+            let newUserName = username.toLowerCase().replace(/ /g, '')
+
+            const user_name = await User.findOne({username: newUserName})
+            if(user_name) return res.status(400).json({msg: "This user name already exists."})
+
+            const user_email = await User.findOne({email})
+            if(user_email) return res.status(400).json({msg: "This email already exists."})
+
+            const userPassword = Math.random().toString(36).slice(-8);
+
+            const passwordHash = await bcrypt.hash(userPassword, 12)  
+
+            const newUser = new User({
+                username: newUserName,
+                email,
+                password: passwordHash,
+               })       
+            await newUser.save()
+
+
+            let transporter = nodemailer.createTransport({
+                   host: 'smtp.gmail.com',
+                   secure:false,
+                   port: 587,
+                   auth: {
+                       user: "zainengr00@gmail.com",
+                       pass: "zmtbnbahxulpekgd"
+                   }
+           })
+    
+         const mailOptions = {
+            from: "zainengr00@gmail.com",
+            to: email,
+            text: `Welcome ${username}! Your password is ${userPassword} and your Token.`,
+            html: `<p>Welcome <b>${User.name}</b>! Your password is <b>${userPassword}</b>.</p>`
+          };
+       transporter.sendMail(mailOptions, function(err, info) {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log(info);
+            }
+        });
             
-            res.json({users})
+         
+            return res.status(200).json({
+                msg:"User was registered successfully! Please check your email",
+            })
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
     };
 
-   const  getUser = async (req, res) => {
+
+    const login = async (req, res) => {
         try {
-            const user = await User.findById(req.params.id).select('-password')
-            .populate("followers following", "-password")
-            if(!user) return res.status(400).json({msg: "User does not exist."})
+            const {email, password } = req.body
+            console.log("email",email)
+            const user = await User.findOne({email:email})
+            if(!user) return res.status(400).json({msg: "This email does not exist"})
+
+            const isMatch = await bcrypt.compare(password, user.password)
+            if(!isMatch) return res.status(400).json({msg: "Password is incorrect"})
+
+            const access_token = createAccessToken({id: user._id})
+            console.log(access_token)
+
+            res.json({
+                msg: 'Login Success!',
+                access_token
+            })
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+
+
+   const logout =  async (req, res) => {
+        try {
+            res.clearCookie('refreshtoken', {path: '/api'})
+            return res.json({msg: "Logged out!"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    };
+
+    const generateAccessToken = async (req, res) => {
+        try {
+            const rf_token = req.cookies.refreshtoken
+            if(!rf_token) return res.status(400).json({msg: "Please login now."})
+
+            jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, async(err, result) => {
+                if(err) return res.status(400).json({msg: "Please login now."})
+                const access_token = createAccessToken({id: result.id})
+
+                res.json({
+                    access_token,
+                })
+            })
             
-            res.json({user})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    };
-    const updateUser = async (req, res) => {
-        try {
-            const { avatar, fullname, mobile, address, story, website, gender } = req.body
-            if(!fullname) return res.status(400).json({msg: "Please add your full name."})
-
-            await User.findOneAndUpdate({_id: req.user._id}, {
-                avatar, fullname, mobile, address, story, website, gender
-            })
-
-            res.json({msg: "Update Success!"})
-
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    };
-   const follow =  async (req, res) => {
-        try {
-            const user = await User.find({_id: req.params.id, followers: req.user._id})
-            if(user.length > 0) return res.status(500).json({msg: "You followed this user."})
-
-            const newUser = await User.findOneAndUpdate({_id: req.params.id}, { 
-                $push: {followers: req.user._id}
-            }, {new: true}).populate("followers following", "-password")
-
-            await User.findOneAndUpdate({_id: req.user._id}, {
-                $push: {following: req.params.id}
-            }, {new: true})
-
-            res.json({newUser})
-
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    };
-   const unfollow =  async (req, res) => {
-        try {
-
-            const newUser = await User.findOneAndUpdate({_id: req.params.id}, { 
-                $pull: {followers: req.user._id}
-            }, {new: true}).populate("followers following", "-password")
-
-            await User.findOneAndUpdate({_id: req.user._id}, {
-                $pull: {following: req.params.id}
-            }, {new: true})
-
-            res.json({newUser})
-
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    };
-
-   const suggestionsUser =  async (req, res) => {
-        try {
-            const newArr = [...req.user.following, req.user._id]
-
-            const num  = req.query.num || 10
-
-            const users = await User.aggregate([
-                { $match: { _id: { $nin: newArr } } },
-                { $sample: { size: Number(num) } },
-                { $lookup: { from: 'users', localField: 'followers', foreignField: '_id', as: 'followers' } },
-                { $lookup: { from: 'users', localField: 'following', foreignField: '_id', as: 'following' } },
-            ]).project("-password")
-
-            return res.json({
-                users,
-                result: users.length
-            })
-
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    };
+    }
 
 
+const createAccessToken = (payload) => {
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'})
+}
 
-export{suggestionsUser,unfollow,follow,updateUser,getUser,searchUser}
+export{signup,login,logout}
