@@ -3,9 +3,9 @@ this repo contain code related to MERN + Blockchain task
 <h3> 👨🏻‍💻 About REPO </h3>
 
 - 💼 &nbsp; This repo contain 4 branches
-- 💼 &nbsp; mernFrontend contain frontend for task-4 (signin and signup page for car CRUD)
-- 💼 &nbsp; mernBackend conatin  backend code for CRUD
-- 💼 &nbsp; blockchain branch contain frontend + smart contracts for blockchain tasks
+- 💼 &nbsp; **mernFrontend** contain frontend for task-4 (signin and signup page for car CRUD)
+- 💼 &nbsp; **mernBackend** conatin  backend code for CRUD
+- 💼 &nbsp; **blockchain** branch contain frontend + smart contracts for blockchain tasks
 
 
 <h3>🛠  ABout Runing code</h3>
