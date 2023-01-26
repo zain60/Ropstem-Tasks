@@ -1,19 +1,19 @@
 # Ropstem-Tasks
 this repo contain code related to MERN + Blockchain task 
-<h3> 👨🏻‍💻 About Me </h3>
+<h3> 👨🏻‍💻 About REPO </h3>
 
-- 🔭 &nbsp; This repo contain 4 branches
-- 🤔 &nbsp; mernFrontend contain frontend for task-4 (signin and signup page for car CRUD)
-- 🎓 &nbsp; mernBackend conatin  backend code for CRUD
+- 💼 &nbsp; This repo contain 4 branches
+- 💼 &nbsp; mernFrontend contain frontend for task-4 (signin and signup page for car CRUD)
+- 💼 &nbsp; mernBackend conatin  backend code for CRUD
 - 💼 &nbsp; blockchain branch contain frontend + smart contracts for blockchain tasks
-- 🌱 &nbsp; Enthusiast in full-Stack and Artificial Intelligence .
-- ✍️ &nbsp; Watching universe and trying out latest design trends as hobbies/side hustles.
-- 😴 &nbsp; I belive, a perfect nap can be the ultimate solution for any stress. 
 
-<h3>🛠 Tech Stack</h3>
 
-- 💻 &nbsp; Python | JavaScript | React | C++ |MERN  
-- 🌐 &nbsp; Full-Stack | React | HTML | CSS | JavaScript | Bootstrap | Sass | Tailwind 
+<h3>🛠  ABout Runing code</h3>
+
+ 
+- 🌐 & you can run Backend code by cloning the code and then install the node modules and run the code
+     -npm i node_modules
+     -npm run dev
 - 🛢 &nbsp; MySQL | Firebase | Postman
 - 🔧 &nbsp; Google Collab | Jupyter | Visual Studio code  | Git
 - 🖥 &nbsp; Adobe Xd | Illustrator | Photoshop | Figma
