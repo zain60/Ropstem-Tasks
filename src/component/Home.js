@@ -4,11 +4,10 @@ import { useEffect } from "react";
 import axios from "axios";
 import "./Home.css";
 
+
 export default function CarCRUD() {
   const [cars, setCars] = useState([
-    { id: 1, make: "Toyota", model: "Camry", color: "Silver", registrationNo: "ABC123" },
-    { id: 2, make: "Honda", model: "Civic", color: "Blue", registrationNo: "DEF456" },
-    { id: 3, make: "Ford", model: "Mustang", color: "Red", registrationNo: "GHI789" }
+    { id: 1, make: "Toyota", model: "Camry", color: "Silver", registration_no: "ABC123" },
   ]);
   const [open, setOpen] = useState(false);
   const [newCarOpen, setNewCarOpen] = useState(false);
@@ -23,85 +22,107 @@ export default function CarCRUD() {
   const [newRegistrationNo, setNewRegistrationNo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [isAlert,setIsAlert] = useState(false);
 
 
+//   function to get all the cars stored on data base
+  const [shouldFetchCars, setShouldFetchCars] = useState(false);
 
-
-  const handleGetAllCars = async (event) => {
-    axios.get('http://localhost:30000/api/car/getCars')
+  const handleGetAllCars = async () => {
+   await axios.get('http://localhost:30000/api/car/getCars')
     .then(response => {
+        console.log("isAlert",isAlert);
+        setIsAlert(true);
+        console.log("isAlert 2",isAlert);
         setCars(response.data.cars)
+        setShouldFetchCars(false);
+    }).catch(error => {
+      console.log("error",error.response.data.msg);
+    });
+   }
+
+  useEffect(() => {
+    if (shouldFetchCars) {
+        handleGetAllCars();
+    }
+  }, [shouldFetchCars]);
+
+  const handleDeleteCar = async (_id) => {
+    let token = localStorage.getItem("accessToken");
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    console.log("car id ==",_id)
+    axios.post('http://localhost:30000/api/car/deleteCar',{_id},config)
+    .then(response => {
+        alert(response.data.msg)
+        setIsAlert(true);
+        setShouldFetchCars(true) 
     }).catch(error => {
       console.log("error",error.response.data.msg);
     });
   };
-  
-  useEffect(() => {
-    // Fetch the data from API
-    handleGetAllCars();
-  }, []);
-
-  const handleClickOpen = car => {
+  const handleUpdateCarOpen =  async(_id) => {
     setOpen(true);
-    setCarToEdit(car);
-    setMake(car.make);
-    setModel(car.model);
-    setColor(car.color);
-    setRegistrationNo(car.registrationNo);
+    setCarToEdit(_id);
   };
-
+  const  handleSave =  async() => {
+    let token = localStorage.getItem("accessToken");
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    let _id = carToEdit
+        const updates = {
+            make:make,
+            model:model,
+            color:color,
+            registration_no:registrationNo
+        }
+        await axios.post('http://localhost:30000/api/car/UpdateCar',{_id,updates},config)
+        .then(response => {
+            alert(response.data.msg)
+            setIsAlert(true);
+        }).catch(error => {
+          console.log("error",error.response.data.msg);
+        });
+        setShouldFetchCars(true) 
+    setOpen(false);
+  };
   const handleClose = () => {
     setOpen(false);
   };
-
-  const handleSave = () => {
- 
-    setCars(prevCars => {
-      const newCars = prevCars.map(car => {
-        if (car.id === carToEdit.id) {
-          return {
-            id: car.id,
-            make: make,
-            model: model,
-            color: color,
-            registrationNo: registrationNo
-          };
-        }
-        return car;
-      });
-      return newCars;
-    });
-    setOpen(false);
-  };
-
-  const handleDelete = id => {
-    setCars(prevCars => prevCars.filter(car => car.id !== id));
-  };
-
   const handleNewCarOpen = () => {
     setNewCarOpen(true);
   };
-
   const handleNewCarClose = () => {
     setNewCarOpen(false);
   };
-
   const handleNewCarSave = (event) => {
+    let token = localStorage.getItem("accessToken");
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+   
     event.preventDefault();
+   
+    console.log("Get token",token);
     let datanewCar = {
         make: newMake,
         model: newModel,
         color: newColor,
         registrationNo: newRegistrationNo
     }
-    axios.post('http://localhost:30000/api/car/createCar',datanewCar)
+    axios.post('http://localhost:30000/api/car/createCar',datanewCar,config)
     .then(response => {
       console.log("responce",response.data);
+      setIsAlert(true);
       alert(response.data.msg)
+      setIsAlert(true);
     }).catch(error => {
       console.log(error.response.data)
       alert(error.response.data.msg)
     });
+    setShouldFetchCars(true) 
     setNewCarOpen(false);
   };
 
@@ -111,112 +132,110 @@ export default function CarCRUD() {
   const currentItems = cars.slice(indexOfFirstItem, indexOfLastItem);
 
 // Change page
-const paginate = pageNumber => setCurrentPage(pageNumber);
+  const paginate = pageNumber => setCurrentPage(pageNumber);
 
 return (
 <div>
-<button onClick={handleNewCarOpen}>Create New Car</button>
-<table>
-<thead>
-  <tr>
-    <th>Make</th>
-    <th>Model</th>
-    <th>Color</th>
-    <th>Registration No</th>
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody>
-{currentItems.map(car => (
-<tr key={car.id}>
-<td>{car.make}</td>
-<td>{car.model}</td>
-<td>{car.color}</td>
-<td>{car.registration_no}</td>
-<td>
-  <div className="actions-div">
-    <button onClick={() => handleClickOpen(car)}>Edit</button>
-    <button onClick={() => handleDelete(car.id)}>Delete</button>
-  </div>
-</td>
-
-
-</tr>
-))}
-</tbody>
-</table>
-{open && (
-<div>
-<h2>Edit Car</h2>
-<label>
-Make:
-<input
-type="text"
-value={make}
-onChange={e => setMake(e.target.value)}
-/>
-</label>
-<br />
-<label>
-Model:
-<input
-type="text"
-value={model}
-onChange={e => setModel(e.target.value)}
-/>
-</label>
-<br />
-<label>
-Color:
-<input
-type="text"
-value={color}
-onChange={e => setColor(e.target.value)}
-/>
-</label>
-<br />
-<label>
-Registration No:
-<input
-type="text"
-value={registrationNo}
-onChange={e => setRegistrationNo(e.target.value)}
-/>
-</label>
-<br />
-<button onClick={()=>handleSave()}>Save</button>
-<button onClick={handleClose}>Cancel</button>
-</div>
-)}
-{newCarOpen && (
-<div>
-<h2>Create New Car</h2>
-<label>
-Make:
-<input
-type="text"
-value={newMake}
-onChange={e => setNewMake(e.target.value)}
-/>
-</label>
-<br />
-<label>
-Model:
-<input
-type="text"
-value={newModel}
-onChange={e => setNewModel(e.target.value)}
-/>
-</label>
-<br />
-<label>
-Color:
-<input
-type="text"
-value={newColor}
-onChange={e => setNewColor(e.target.value)}
-/>
-</label>
+  <button onClick={handleNewCarOpen}>Create New Car</button>
+  <table> 
+    <thead>
+        <tr>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Color</th>
+        <th>Registration No</th>
+        <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {currentItems.map(car => (
+        <tr key={car._id}>
+            <td>{car.make}</td>
+            <td>{car.model}</td>
+            <td>{car.color}</td>
+            <td>{car.registration_no}</td>
+            <td>
+            <div className="actions-div">
+                <button onClick={() => handleUpdateCarOpen(car,car._id)}>Edit</button>
+                <button onClick={() => handleDeleteCar(car._id)}>Delete</button>
+            </div>
+            </td>
+        </tr>
+        ))}
+    </tbody>
+    </table>
+    {open && (
+        <div>
+        <h2>Edit Car</h2>
+        <label>
+        Make:
+        <input
+            type="text"
+            value={make}
+            onChange={e => setMake(e.target.value)}
+        />
+        </label>
+        <br />
+        <label>
+        Model:
+        <input
+        type="text"
+        value={model}
+        onChange={e => setModel(e.target.value)}
+        />
+        </label>
+        <br />
+        <label>
+        Color:
+        <input
+        type="text"
+        value={color}
+        onChange={e => setColor(e.target.value)}
+        />
+        </label>
+        <br />
+        <label>
+        Registration No:
+        <input
+        type="text"
+        value={registrationNo}
+        onChange={e => setRegistrationNo(e.target.value)}
+        />
+        </label>
+        <br />
+        <button onClick={()=>handleSave()}>Save</button>
+        <button onClick={handleClose}>Cancel</button>
+        </div>
+    )}
+    {newCarOpen && (
+    <div>
+    <h2>Create New Car</h2>
+    <label>
+    Make:
+    <input
+    type="text"
+    value={newMake}
+    onChange={e => setNewMake(e.target.value)}
+    />
+    </label>
+    <br />
+    <label>
+        Model:
+        <input
+        type="text"
+        value={newModel}
+        onChange={e => setNewModel(e.target.value)}
+        />
+    </label>
+    <br />
+    <label>
+        Color:
+        <input
+        type="text"
+        value={newColor}
+        onChange={e => setNewColor(e.target.value)}
+        />
+    </label>
       <br />
       <label>
         Registration No:
@@ -229,15 +248,15 @@ onChange={e => setNewColor(e.target.value)}
       <br />
       <button onClick={(event)=>handleNewCarSave(event)}>Save</button>
       <button onClick={handleNewCarClose}>Cancel</button>
-    </div>
-  )}
-  <div className="pagination">
-    {Array.from({ length: Math.ceil(cars.length / itemsPerPage) }, (_, i) => (
-      <button key={i} onClick={() => paginate(i + 1)}>
+     </div>
+    )}
+      <div className="pagination">
+       {Array.from({ length: Math.ceil(cars.length / itemsPerPage) }, (_, i) => (
+       <button key={i} onClick={() => paginate(i + 1)}>
         {i + 1}
       </button>
-    ))}
-  </div>
-</div>
+     ))}
+    </div>
+    </div>
 );
 }

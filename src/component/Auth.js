@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 
 
 
-export default function (props) {
-  let [authMode, setAuthMode] = useState("signup")
+export default function  AUth (props) {
+  let [authMode, setAuthMode] = useState("signin")
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +26,9 @@ export default function (props) {
     console.log(email,password)
     axios.post('http://localhost:30000/api/user/login',{email,password})
     .then(response => {
-      console.log("responce",alert(response.data));
+      console.log("responce",response.data.access_token);
+      localStorage.setItem("accessToken",response.data.access_token);
+      alert(response.data.msg)
       navigateHomepage()
     }).catch(error => {
       console.log("error",error.response.data.msg);
@@ -36,8 +38,8 @@ export default function (props) {
 
   const handleSignup = async (event) => {
     event.preventDefault()
-    console.log(username,email,password)
-    axios.post('http://localhost:30000/api/user/signup',{username,email,password})
+    console.log(username,email)
+    axios.post('http://localhost:30000/api/user/signup',{username,email})
     .then(response => {
       console.log("responce",response.data);
       alert(response.data.msg)
@@ -125,23 +127,12 @@ export default function (props) {
                 placeholder="Email Address"
             />
           </div>
-          <div className="form-group mt-3">
-            <label>Password</label>
-            <input
-             value={password}
-             onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              className="form-control mt-1"
-              placeholder="Password"
-            />
-          </div>
           <div className="d-grid gap-2 mt-3">
             <button  onClick={(event)=>handleSignup(event)} className="btn btn-primary">
               Submit
             </button>
           </div>
           <p className="text-center mt-2">
-            Forgot <a href="#">password?</a>
           </p>
         </div>
       </form>
