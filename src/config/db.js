@@ -1,16 +1,16 @@
-import mongoose  from "mongoose";
-import {config} from "../config/config.js"
+import mongoose from 'mongoose';
+import { config } from '../config/config.js';
 // import currentConf from "../config/current-config.js"
 
 async function connectDatabase() {
-    const connOptions  = {
-      useNewUrlParser : true,
-      useUnifiedTopology: true
-    }
+  const connOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  };
   try {
     const conn = await mongoose.connect(config.mongodb, connOptions);
     if (conn) {
-        console.log(`Connected To The ${conn.connection.host}`);
+      console.log(`Connected To The ${conn.connection.host}`);
     }
   } catch (error) {
     console.log(error.message, error.stack);
