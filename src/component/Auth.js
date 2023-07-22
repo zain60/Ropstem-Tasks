@@ -100,6 +100,7 @@ const handleMetamaskAuth = async (method) => {
         await signInWithMetamask(address)
       }
  
+      
       const balance = await web3.eth.getBalance(address);
 
       console.log('Successfully authenticated with Metamask.');
