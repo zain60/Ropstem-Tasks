@@ -1,4 +1,5 @@
 import React from "react";
+import "./CarTable.css";
 
 const CarTable = ({ cars, handleUpdateCarOpen, handleDeleteCar }) => {
   return (

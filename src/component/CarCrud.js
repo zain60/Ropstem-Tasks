@@ -7,6 +7,7 @@ import CarSearch from "./CarSearch";
 import CarTable from "./CarTable";
 import CarForm from "./CarForm";
 import Pagination from "./Pagination";
+import EditCar from "./EditCar";
 
 const CarCRUD = () => {
 	const [cars, setCars] = useState([
@@ -33,7 +34,7 @@ const CarCRUD = () => {
 	const [newModel, setNewModel] = useState("");
 	const [newColor, setNewColor] = useState("");
 	const [newRegistrationNo, setNewRegistrationNo] = useState("");
-	const [itemsPerPage] = useState(5);
+	const [totalPage,setTotalPages] = useState();
 	const [isAlert, setIsAlert] = useState(false);
 	const [shouldFetchCars, setShouldFetchCars] = useState(true);
 
@@ -124,18 +125,6 @@ const CarCRUD = () => {
 		setNewCarOpen(false);
 	};
 
-    const handlePrevPage = () => {
-        if (currentPage > 1) {
-          setCurrentPage((prevPage) => prevPage - 1);
-        }
-      };
-    
-      const handleNextPage = () => {
-        const maxPage = Math.ceil(cars.length / itemsPerPage);
-        if (currentPage < maxPage) {
-          setCurrentPage((prevPage) => prevPage + 1);
-        }
-      };
 	// Function to handle creating a new car
 
 	const handleNewCarOpen = () => {
@@ -148,6 +137,7 @@ const CarCRUD = () => {
 	const handleGetAllCars = async (queryParameters) => {
 		let category = {
 			item: queryParameters,
+			page:currentPage
 		};
 
 		try {
@@ -155,12 +145,14 @@ const CarCRUD = () => {
 				"http://localhost:30000/api/car/getCars",
 				category
 			);
-                const startIdx = (currentPage - 1) * itemsPerPage;
-                const endIdx = startIdx + itemsPerPage;
-                const carsForPage = cars.slice(startIdx, endIdx);
-            
-                setCars(carsForPage);
+            	setCars(response.data.cars)
+				setTotalPages(response?.data?.totalCount)
+				 setTotalPages(Math.ceil(response?.data?.totalCount / 4));
                 setIsAlert(true);
+				if(currentPage==totalPage){
+					setCurrentPage(1)
+				}
+				
                 setShouldFetchCars(false);
 		} catch (error) {
 			console.log("error", error.response.data.msg);
@@ -170,9 +162,15 @@ const CarCRUD = () => {
 
     useEffect(() => {
         if (shouldFetchCars) {
-          handleGetAllCars(category);
+				handleGetAllCars(category);	
         }
-      }, [shouldFetchCars, category, currentPage])
+      }, [currentPage,shouldFetchCars, category])
+
+	  const handleSetCurrentPage = (pageNumber) => {
+		setCurrentPage(pageNumber);
+		setShouldFetchCars(true);
+	  };
+	  
 
 	return (
 		<div>
@@ -188,54 +186,8 @@ const CarCRUD = () => {
 			/>
 			{open && (
 				<div>
-					<h2>Edit Car</h2>
-					<label>
-						category:
-						<input
-							type="text"
-							value={category}
-							onChange={(e) => setCategory(e.target.value)}
-						/>
-					</label>
-					<label>
-						Make:
-						<input
-							type="text"
-							value={make}
-							onChange={(e) => setMake(e.target.value)}
-						/>
-					</label>
-					<br />
-					<label>
-						Model:
-						<input
-							type="text"
-							value={model}
-							onChange={(e) => setModel(e.target.value)}
-						/>
-					</label>
-					<br />
-					<label>
-						Color:
-						<input
-							type="text"
-							value={color}
-							onChange={(e) => setColor(e.target.value)}
-						/>
-					</label>
-					<br />
-					<label>
-						Registration No:
-						<input
-							type="text"
-							value={registrationNo}
-							onChange={(e) => setRegistrationNo(e.target.value)}
-						/>
-					</label>
-					<br />
-					<button onClick={(e) => handleSave()}>Save</button>
-					<button onClick={() => handleNewCarClose()}>cancle</button>
-				</div>
+				<EditCar car={carToEdit} handleUpdateCarOpen={setOpen} />
+			  </div>
 			)}
 
 			{newCarOpen ? (
@@ -251,13 +203,13 @@ const CarCRUD = () => {
 				<button onClick={()=>handleNewCarOpen()}>Create New Car</button>
 		)}
 		<Pagination
-        cars={cars}
         currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        paginate={setCurrentPage}
+        totalPage={totalPage}
+		paginate={handleSetCurrentPage}
       />
     </div>
 	);
+	
 };
 
 export default CarCRUD;

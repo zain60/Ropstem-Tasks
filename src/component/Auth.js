@@ -145,6 +145,7 @@ const handleMetamaskAuth = async (method) => {
             <div className="form-group mt-3">
               <label>Password</label>
               <input
+               type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="form-control mt-1"

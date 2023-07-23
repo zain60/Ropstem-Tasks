@@ -1,19 +1,24 @@
+
+/* Updated CSS for Auth component */
+
 .Auth-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom, #6a11cb, #2575fc);
+  background: #f2f2f2;
 }
 
 .Auth-form {
-  width: 420px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.4); /* Increased the shadow */
   padding: 30px;
   border-radius: 8px;
-  background-color: white;
+  background-color: #ffffff;
 }
+
+/* ... (Rest of the CSS styles) ... */
 
 .Auth-form-content {
   padding: 2%;
@@ -33,23 +38,33 @@ label {
   color: #333;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="name"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
   border: none;
   border-radius: 4px;
-  background-color: #f8f8f8;
+  background-color: #f2f2f2;
   font-size: 16px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
 }
 
-input:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="name"]:focus {
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(24, 144, 255, 0.25);
+  border-color: #6a11cb;
 }
 
-.btn-primary {
+button[type="submit"],
+.btn-secondary {
   padding: 12px 20px;
   margin: 8px 0;
   border-radius: 4px;
@@ -58,33 +73,42 @@ input:focus {
   cursor: pointer;
   font-size: 16px;
   width: 100%;
+  border: none;
 }
-  .btn-primary:hover {
-    background-color: #2575fc;
-    }
-    
-    .text-center {
-    text-align: center;
-    }
-    
-    .link-primary {
-    color: #6a11cb;
-    cursor: pointer;
-    text-decoration: underline;
-    }
-    
-    .link-primary:hover {
-    color: #2575fc;
-    }
-    
-    .mt-3 {
-    margin-top: 1rem;
-    }
-    
-    .d-grid {
-    display: grid;
-    }
-    
-    .gap-2 {
-    grid-gap: 1rem;
-    }
+
+button[type="submit"]:hover,
+.btn-secondary:hover {
+  background-color: #2575fc;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.link-primary {
+  color: #6a11cb;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-primary:hover {
+  color: #2575fc;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.gap-2 {
+  grid-gap: 1rem;
+}
+
+/* Style for error messages */
+.error-message {
+  color: red;
+  font-size: 14px;
+}

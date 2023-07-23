@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Modal from "./Model";
+import "./Home.css";
 
 const CarForm = ({ handleNewCarSave,handlecancelNewCar }) => {
   const [newMake, setNewMake] = useState("");
@@ -6,6 +8,16 @@ const CarForm = ({ handleNewCarSave,handlecancelNewCar }) => {
   const [newColor, setNewColor] = useState("");
   const[category,setCategory] = useState("");
   const [newRegistrationNo, setNewRegistrationNo] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,12 +31,19 @@ const CarForm = ({ handleNewCarSave,handlecancelNewCar }) => {
       registrationNo: newRegistrationNo,
     };
     handleNewCarSave(formData);
+    setShowModal(false);
   };
+
+
+
 
   return (
     <div>
-      <h2>Create New Car</h2>
-      <form onSubmit={handleSubmit}>
+      <button onClick={handleOpenModal}>Create New Car</button>
+      <Modal show={showModal} handleClose={handleCloseModal}>
+        <div className="card">
+          <h2>Create New Car</h2>
+          <form onSubmit={handleSubmit}>
         <label>
           Category:
           <input
@@ -74,8 +93,11 @@ const CarForm = ({ handleNewCarSave,handlecancelNewCar }) => {
         <button onClick={(e) => handlecancelNewCar(e)} type="submit">cancel</button>
 
       </form>
+        </div>
+      </Modal>
     </div>
   );
 };
 
 export default CarForm;
+

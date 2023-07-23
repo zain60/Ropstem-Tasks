@@ -1,13 +1,28 @@
 import React from "react";
 
-const Pagination = ({ cars, currentPage, itemsPerPage, paginate }) => {
+const Pagination = ({ currentPage,paginate ,totalPage}) => {
+
+  const handleNextPage = () => {
+    if (currentPage < totalPage) {
+      paginate(currentPage + 1);
+    }
+  };
+  
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      paginate(currentPage - 1);
+    }
+  };
+  
+
   return (
     <div className="pagination">
-      {Array.from({ length: Math.ceil(cars.length / itemsPerPage) }, (_, i) => (
-        <button key={i} onClick={() => paginate(i + 1)}>
-          {i + 1}
-        </button>
-      ))}
+      <button onClick={handlePrevPage} disabled={currentPage === 1}>
+        Prev
+      </button>
+      <button onClick={handleNextPage} disabled={currentPage === totalPage}>
+        Next
+      </button>
     </div>
   );
 };
