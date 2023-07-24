@@ -14,23 +14,25 @@ This repository contains the backend code for a Car Management System. The syste
 
 ## Installation
 
+
+
 1. Clone the repository to your local machine.
+```bash
+  git clone https://github.com/zain60/Ropstem-Tasks/tree/mernBackend
+```
+Install dependencies
 
-2. Install the required dependencies by running the following command:
-npm install 
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run start
+```
 
 
-3. Create a `.env` file in the root directory  or  add the following environment variables in existing env:
-
-PORT=3000
-MONGODB_URI="your_mongodb_connection_string"
-ACCESS_TOKEN_SECRET="your_access_token_secret"
-
-4. Start the server by running the following command:
-npm run dev
-
-
-The server will start on port 3000 by default. You can change the port by modifying the `PORT` environment variable in the `.env` file.
 
 ## API Endpoints
 
