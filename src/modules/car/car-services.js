@@ -21,21 +21,13 @@ const createCar = async (req, res) => {
 
 const getAllCars = async (req, res) => {
   try {
-    const { item, page } = req.body; 
+    const { item, page } = req.body;
     const query = { category: item };
     const pageNumber = parseInt(page) || 1;
-    const itemsPerPage =  4;
-
-    // Calculate the number of documents to skip
+    const itemsPerPage = 4;
     const skip = (pageNumber - 1) * itemsPerPage;
-
-    // Get total count of cars for the selected category
     const totalCount = await Car.countDocuments(query);
-    // Get cars for the selected category with pagination
-    const cars = await Car.find(query)
-      .skip(skip)
-      .limit(itemsPerPage);
-
+    const cars = await Car.find(query).skip(skip).limit(itemsPerPage);
 
     if (!cars || cars.length === 0) {
       return res.status(400).json({ msg: 'No car available for the selected category' });
